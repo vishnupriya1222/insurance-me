@@ -9,7 +9,7 @@ pipeline {
     stage('CheckOut') {
       steps {
         echo 'Checkout the source code from GitHub'
-        git branch: 'main', url: 'https://github.com/vishnupriya1222/InsureProject mar27.git'
+        git branch: 'main', url: 'https://github.com/vishnupriya1222/insure-meProject mar27.git'
             }
     }
     
@@ -22,13 +22,13 @@ pipeline {
     
     stage('Publish Reports using HTML') {
       steps {
-      publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '/var/lib/jenkins/workspace/Insure-Project/target/surefire-reports', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+      publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '/var/lib/jenkins/workspace/Insurance-me-Project/target/surefire-reports', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
             }
     }
     
     stage('Docker Image Creation') {
       steps {
-        sh 'docker build -t vishnupriya1222/insureproject mar27:latest .'
+        sh 'docker build -t vishnupriya1222/insurance-meproject mar27:latest .'
             }
     }
     stage('DockerLogin') {
@@ -41,7 +41,7 @@ pipeline {
 
     stage('Push Image to DockerHub') {
       steps {
-        sh 'docker push vishnupriya1222/insureproject mar27 :latest'
+        sh 'docker push vishnupriya1222/insurance-meproject mar27 :latest'
             }
     }
     stage('Deploy Application using Ansible') {
