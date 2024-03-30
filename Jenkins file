@@ -1,0 +1,54 @@
+pipeline {
+  agent any
+
+  tools {
+    maven 'M2_HOME'
+    }
+  
+  stages {
+    stage('CheckOut') {
+      steps {
+        echo 'Checkout the source code from GitHub'
+        git branch: 'main', url: 'https://github.com/vishnupriya1222/InsureProject mar27.git'
+            }
+    }
+    
+    stage('Package the Application') {
+      steps {
+        echo " Packaing the Application"
+        sh 'mvn clean package'
+            }
+    }
+    
+    stage('Publish Reports using HTML') {
+      steps {
+      publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '/var/lib/jenkins/workspace/Insure-Project/target/surefire-reports', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+            }
+    }
+    
+    stage('Docker Image Creation') {
+      steps {
+        sh 'docker build -t vishnupriya1222/insureproject mar27:latest .'
+            }
+    }
+    stage('DockerLogin') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'Docker-Hub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+        sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+}
+            }
+    }
+
+    stage('Push Image to DockerHub') {
+      steps {
+        sh 'docker push vishnupriya1222/insureproject mar27 :latest'
+            }
+    }
+    stage('Deploy Application using Ansible') {
+      steps {
+        ansiblePlaybook credentialsId: 'private-key', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: 'deploy.yml'
+            }
+    }
+
+  }
+}
