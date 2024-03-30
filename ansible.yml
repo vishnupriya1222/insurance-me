@@ -1,0 +1,20 @@
+- name: Docker configure in Ec2 Machine
+  hosts: all
+  become : true
+  connection: ssh
+  tasks:
+  - name: updating the New Ec2 Machine 
+    command: sudo yum update
+
+  - name: Install Docker
+    command: sudo yum install docker -y
+    become: yes
+    become_user: root
+
+  - name: Start Docker service
+    command: sudo systemctl start docker
+    become: yes
+    become_user: root
+
+  - name: Deploy the Image and Run as Container
+    command: docker run -itd -p 8084:8081 vishnupriya1222/insurance-me:4.0
