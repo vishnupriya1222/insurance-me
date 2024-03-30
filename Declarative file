@@ -9,7 +9,7 @@ pipeline {
     stage('CheckOut') {
       steps {
         echo 'Checkout the source code from GitHub'
-        git branch: 'main', url: 'https://github.com/vishnupriya1222/InsureMe-28Mar.git'
+        git branch: 'main', url: 'https://github.com/vishnupriya1222/insurance-me-28Mar.git'
             }
     }
    stage('Package') {
@@ -21,13 +21,13 @@ pipeline {
    stage('Publish TestNG report') {
       steps {
         echo 'Generate a TestNG report'
-        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '/var/lib/jenkins/workspace/InsureMeProject/target/surefire-reports', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+        publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '/var/lib/jenkins/workspace/insurance-meProject/target/surefire-reports', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
             }
     }
    stage('Create Docker Image') {
       steps {
         echo 'Create a Docker Image'
-        sh 'docker build -t vishnupriya1222/apr-insure-project:2.0'
+        sh 'docker build -t vishnupriya1222/apr-insurance-me-project:2.0'
             }
     }
      stage('Docker Login') {
@@ -41,7 +41,7 @@ pipeline {
      stage('Push Docker Image') {
       steps {
         echo 'Push a Docker Image'
-        sh 'docker push vishnupriya1222/apr-insure-project:2.0'
+        sh 'docker push vishnupriya1222/apr-insurance-me-project:2.0'
                    }
             }
     }
